@@ -9,7 +9,8 @@ const Home = () => {
   const [searchTerm2, setSearchTerm2] = useState('');
   const [team1Done, setTeam1Done] = useState(false);
   const [team2Done, setTeam2Done] = useState(false);
-  const [showRatings] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [showRatings, setShowRatings] = useState(false);
 
   const categoryLimits = {
     running: 1,
@@ -132,6 +133,33 @@ const Home = () => {
     } else {
       fillTeam('team2');
     }
+  
+  };
+
+  const handleSimulateGame = () => {
+    let team1Score = 0;
+    let team2Score = 0;
+
+    ['running', 'passing', 'receiving', 'defense'].forEach(category => {
+      team1[category].forEach((player, index) => {
+        const team2Player = team2[category][index];
+        if (player.rating > team2Player.rating) {
+          team1Score++;
+        } else if (team2Player.rating > player.rating) {
+          team2Score++;
+        }
+      });
+    });
+
+    if (team1Score > team2Score) {
+      setWinner('Team 1');
+    } else if (team2Score > team1Score) {
+      setWinner('Team 2');
+    } else {
+      setWinner('Draw');
+    }
+
+    setShowRatings(true);
   };
 
   return (
@@ -213,6 +241,18 @@ const Home = () => {
           </ul>
         </div>
       </div>
+      {team1Done && team2Done && (
+        <div style={{ textAlign: 'center', margin: '20px 0' }}>
+          <button onClick={handleSimulateGame} style={{ backgroundColor: 'blue', color: 'white' }}>Simulate Game</button>
+        </div>
+      )}
+
+      {winner && (
+        <div style={{ textAlign: 'center', margin: '20px 0' }}>
+          <h3>Winner: {winner}</h3>
+        </div>
+      )}
+
     </div>
   );
 };
