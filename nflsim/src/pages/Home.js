@@ -50,7 +50,31 @@ const Home = () => {
     player.name.toLowerCase().includes(searchTerm2.toLowerCase())
   ).slice(0, 10);
 
+  const isPlayerAssigned = (playerName) => {
+    const isAssignedInTeam1 = Object.values(team1).flat().some(p => p.name === playerName);
+    const isAssignedInTeam2 = Object.values(team2).flat().some(p => p.name === playerName);
+    return isAssignedInTeam1 || isAssignedInTeam2;
+  };
+
+  const removePlayer = (playerName, teamName, category) => {
+    if (teamName === 'team1') {
+      setTeam1(prevTeam => ({
+        ...prevTeam,
+        [category]: prevTeam[category].filter(player => player.name !== playerName)
+      }));
+    } else {
+      setTeam2(prevTeam => ({
+        ...prevTeam,
+        [category]: prevTeam[category].filter(player => player.name !== playerName)
+      }));
+    }
+  };
+
   const handlePlayerSelect = (player, team, category) => {
+    if (isPlayerAssigned(player.name)) {
+      alert(`${player.name} is already assigned to a position.`);
+      return;
+    }
     const newPlayer = { name: player.name, rating: player[category] };
 
     if (team === 'team1') {
@@ -150,6 +174,7 @@ const Home = () => {
               team1[category].map((player, index) => (
                 <li key={index}>
                   {player.name} - {category} {showRatings && `- Rating: ${player.rating}`}
+                  <button onClick={() => removePlayer(player.name, 'team1', category)}>x</button>
                 </li>
               ))
             )}
@@ -181,6 +206,7 @@ const Home = () => {
               team2[category].map((player, index) => (
                 <li key={index}>
                   {player.name} - {category} {showRatings && `- Rating: ${player.rating}`}
+                  <button onClick={() => removePlayer(player.name, 'team1', category)}>x</button>
                 </li>
               ))
             )}
