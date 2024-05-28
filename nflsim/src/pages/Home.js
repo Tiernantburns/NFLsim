@@ -206,7 +206,7 @@ const Home = () => {
               team2[category].map((player, index) => (
                 <li key={index}>
                   {player.name} - {category} {showRatings && `- Rating: ${player.rating}`}
-                  <button onClick={() => removePlayer(player.name, 'team1', category)}>x</button>
+                  <button onClick={() => removePlayer(player.name, 'team2', category)}>x</button>
                 </li>
               ))
             )}
