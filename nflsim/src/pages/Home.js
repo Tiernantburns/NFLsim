@@ -11,6 +11,7 @@ const Home = () => {
   const [team2Done, setTeam2Done] = useState(false);
   const [winner, setWinner] = useState(null);
   const [showRatings, setShowRatings] = useState(false);
+  const [imagePreview, setImagePreview] = useState('NFL.jpg');
 
   const categoryLimits = {
     running: 1,
@@ -135,6 +136,18 @@ const Home = () => {
     }
   
   };
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      setImagePreview(e.target.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSimulateGame = () => {
     let team1Score = 0;
@@ -164,6 +177,25 @@ const Home = () => {
 
   return (
     <div>
+      <div className="App">
+      <header className="App-header">
+        <h1>Welcome to the NFL Themed App</h1>
+      </header>
+
+      <nav></nav>
+
+      <div className="content">
+        <h2>Upload Your Favorite Football Image</h2>
+        <input type="file" id="imageUpload" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+        <button onClick={() => document.getElementById('imageUpload').click()}>Upload Image</button>
+        <div id="imagePreview" style={{ marginTop: '20px' }}>
+          {imagePreview && <img src={imagePreview} alt="NFL" style={{ maxWidth: '300px', height: 'auto' }} />}
+        </div>
+      </div>
+
+      <footer>
+        <p>&copy; 2024 NFL Themed App. All rights reserved.</p>
+      </footer>
       <h2>Welcome to the NFL Data Simulator</h2>
       <p>Use the navigation to view team and player stats.</p>
       <p>
@@ -252,7 +284,7 @@ const Home = () => {
           <h3>Winner: {winner}</h3>
         </div>
       )}
-
+    </div>
     </div>
   );
 };
